@@ -29,3 +29,6 @@ import IntegratorOrderProof
 #print axioms IntegratorOrderProof.FullVA.Transition.nondynamic_rows_vanish
 #print axioms IntegratorOrderProof.FullVA.Transition.reducedCollocation_of_rows
 #print axioms IntegratorOrderProof.FullVA.Transition.nondynamic_rows_iff
+#print axioms IntegratorOrderProof.norm_le_of_perturbed
+#print axioms IntegratorOrderProof.uniform_inverse_of_perturbation
+#print axioms IntegratorOrderProof.simplified_newton_residual_decay
