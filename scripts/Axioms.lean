@@ -1,0 +1,19 @@
+-- Run with:  lake env lean scripts/Axioms.lean
+-- Every theorem must report only [propext, Classical.choice, Quot.sound]; `sorryAx` must not appear.
+import IntegratorOrderProof
+#print axioms IntegratorOrderProof.exists_root_of_linearization
+#print axioms IntegratorOrderProof.stage_root_exists_unique
+#print axioms IntegratorOrderProof.linearization_of_fderiv_bound
+#print axioms IntegratorOrderProof.inexact_newton_output_bound
+#print axioms IntegratorOrderProof.endpoint_closure_exists
+#print axioms IntegratorOrderProof.endpoint_correction_bound_h7
+#print axioms IntegratorOrderProof.geom_sum_le_gronwallFactor
+#print axioms IntegratorOrderProof.local_to_global
+#print axioms IntegratorOrderProof.reported_grid_bound
+#print axioms IntegratorOrderProof.local_defect_bound
+#print axioms IntegratorOrderProof.local_defect_bound_paper
+#print axioms IntegratorOrderProof.conditional_sixth_order_grid_bound
+#print axioms IntegratorOrderProof.NewtonEuler.transRow_eq
+#print axioms IntegratorOrderProof.NewtonEuler.rotRow_eq
+#print axioms IntegratorOrderProof.NewtonEuler.dynamic_rows_vanish
+#print axioms IntegratorOrderProof.NewtonEuler.card_dynamic_rows

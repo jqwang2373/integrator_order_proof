@@ -1,0 +1,69 @@
+# IntegratorOrderProof
+
+Lean 4 + Mathlib formalization of the **conditional sixth-order theorem chain** for the
+`Gauss6/FullVA` Lie-group integrator of the CMAME manuscript
+`lie_group_integrator_work/paper_v047_cylindrical_chain/main_cmame.tex`
+(theorem `thm:g6fullva-order`), plus the 36 Newton–Euler dynamic-row identities (P5).
+
+Toolchain: `leanprover/lean4:v4.34.0`, Mathlib tag `v4.34.0` (pinned in `lakefile.toml`).
+
+```bash
+lake exe cache get          # once, fetches Mathlib oleans
+lake build                  # builds everything (no sorry)
+lake env lean scripts/Axioms.lean   # each theorem: [propext, Classical.choice, Quot.sound]
+```
+
+## What is proved
+
+| Lean theorem | Manuscript object | Statement |
+| --- | --- | --- |
+| `exists_root_of_linearization`, `stage_root_exists_unique` | `lem:stage-residual-defect` (Kantorovich step) | accepted root `Z_A` exists in the ball of radius `2M‖F(Z_G)‖ ≤ 2 M C_R h⁷`, unique in the linearization ball |
+| `linearization_of_fderiv_bound` | derivative form of P2 | `‖J⁻¹‖ ≤ M`, `‖DF - J‖ ≤ δ`, `Mδ ≤ ½` ⇒ linearization inequality (mean value) |
+| `norm_sub_le_of_linearization` | Eq. `stage-pert-root-bound` | `‖Z_A - Z_G‖ ≤ 2 M ‖F(Z_G)‖`, i.e. `C_Z = 2 M C_R` |
+| `inexact_newton_stage_bound`, `inexact_newton_output_bound` | `lem:inexact-newton` | `‖Z̃_A - Z_A‖ ≤ 2 M_A η`, `‖P(Z̃_A) - P(Z_A)‖ ≤ 2 M_A M_N η` |
+| `endpoint_correction_bound`, `endpoint_correction_bound_h7`, `endpoint_closure_exists` | `lem:endpoint-closure` | closed endpoint exists; any right-inverse-type closed endpoint has `‖Δz_E‖ ≤ 2 M_ri ‖E(z_u)‖ ≤ 2 M_ri C_raw h⁷ ≤ 4 M_ri C_raw h⁷` |
+| `gronwallFactor`, `geom_sum_le_gronwallFactor` | Eq. `local-global-lemma-gronwall-factor` | `h ∑_{k<n}(1+C_s h)^k ≤ Γ_s(T)` for `n h ≤ T` |
+| `local_to_global`, `reported_grid_bound` | `lem:local-global-transfer` (restricted-domain form, first-exit bootstrap) | `y_n ∈ K` and `‖y_n - Y_n‖ ≤ C_ℓ Γ_s(T) h^p`; reporting map adds `C_𝓡` |
+| `local_defect_bound`, `local_defect_bound_paper` | Eq. `g6fva-local-defect-theorem` | four-term chain, `C_loc = C_G + M_E·2MC_R + C_E + 2M_AM_N c_η` |
+| `conditional_sixth_order_grid_bound` | Eqs. `g6fva-reduced-grid-bound`, `g6fva-reported-grid-bound` | `C_red = C_loc Γ_s(T)`, `C_qv = C_𝓡 C_red`, order `h⁶` |
+| `NewtonEuler.transRow_eq`, `NewtonEuler.rotRow_eq` | D1/D2 identities (`NEWTON_EULER_BALANCE_IDENTITY_AUDIT`) | implemented `trans`/`rot` rows of `run_v047.py` equal the Newton/Euler balance defects, as ℝ³ vectors with the cross-product torque structure |
+| `NewtonEuler.dynamic_rows_vanish`, `card_dynamic_rows` | P5 (`D5_DYNAMIC_DIRECT_SUBSTITUTION_CERTIFICATE`) | pointwise balance at the lifted stage ⇒ all `3·2·2·3 = 36` rows are exactly `0` |
+
+## What is assumed (enters as hypotheses, not proved here)
+
+* **Gauss collocation order and Lie-group chart transfer** (Lemmas A/B of `ORDER_PROOF_LEDGER.md`):
+  the hypothesis `hG : ‖𝓔(Z_G) - φ_h(y)‖ ≤ C_G h⁷`.
+* **P1/P2/P6 interfaces**: inverse bounds `‖J⁻¹‖ ≤ M`, linearization on balls, endpoint right
+  inverse `D ∘ B = id`, stability scale `1 + C_s h`, solver envelope `η ≤ c_η h⁷`, tube margin.
+* **P4**: the 96 non-dynamic rows enter only through `hR : ‖F(Z_G)‖ ≤ C_R h⁷`.
+* **P5 lift property**: `hlift` says the lifted Gauss stage satisfies the pointwise Newton–Euler
+  balance (the defining property of the smooth FullVA lift, `lem:fullva-stage-lift`). What is
+  proved is that the *implemented* rows are exactly the balance defects.
+* Nothing about the concrete cylindrical-chain mechanism: no numerics, no interval arithmetic,
+  no P7 residual-to-error transfer, no source-policy rows.
+
+## Deviations from the manuscript (all in the safe direction)
+
+* Endpoint constant: proved `C_E = 2 M_ri C_raw`; the manuscript states `4 M_ri C_raw`.
+  `Cloc_le_ClocPaper` shows the proved bound implies the printed one.
+* The P2 "strong local residual inverse" is taken directly as the averaged-Jacobian inequality
+  `‖J⁻¹(F u - F v) - (u - v)‖ ≤ ½‖u - v‖`; the manuscript's derivative form
+  (`‖D²F‖ ≤ L`, `2 M² L C_R h⁷ ≤ ½`) is derived from it in `linearization_of_fderiv_bound`.
+* The accepted closure output is characterized as a right-inverse-type root `z_u + B w`
+  inside the endpoint ball (the manuscript's "correction chosen no larger than a local
+  right-inverse particular solution while the iterates remain in `B_{r_E}(z_*)`").
+* Local-to-global is stated in the restricted-domain form (stability only along the trajectory,
+  only while `y_n ∈ K`), which is the form the theorem actually consumes.
+
+## Layout
+
+```
+IntegratorOrderProof/
+  Basic.lean                          (1 + C h)^n ≤ exp(C h n)
+  PerturbationChain/Contraction.lean  Kantorovich root lemma, inexact Newton, derivative form of P2
+  PerturbationChain/EndpointClosure.lean  right-inverse endpoint closure
+  PerturbationChain/LocalToGlobal.lean    Γ_s(T), discrete Gronwall with tube-retention bootstrap
+  PerturbationChain/MainTheorem.lean      C_loc assembly, grid bounds
+  NewtonEuler/DynamicRows.lean            36 Newton–Euler rows transcribed from run_v047.py
+scripts/Axioms.lean                       #print axioms for every main theorem
+```
