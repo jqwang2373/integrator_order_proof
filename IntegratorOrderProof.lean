@@ -7,3 +7,4 @@ import IntegratorOrderProof.PerturbationChain.MainTheorem
 import IntegratorOrderProof.NewtonEuler.DynamicRows
 import IntegratorOrderProof.Gauss.Tableau
 import IntegratorOrderProof.Gauss.QuadratureError
+import IntegratorOrderProof.FullVA.NonDynamicRows

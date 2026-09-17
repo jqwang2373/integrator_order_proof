@@ -25,3 +25,6 @@ import IntegratorOrderProof
 #print axioms IntegratorOrderProof.quadrature_error_bound
 #print axioms IntegratorOrderProof.gauss6_quadrature_error
 #print axioms IntegratorOrderProof.gauss6_step_defect
+#print axioms IntegratorOrderProof.FullVA.Transition.nondynamic_rows_vanish
+#print axioms IntegratorOrderProof.FullVA.Transition.reducedCollocation_of_rows
+#print axioms IntegratorOrderProof.FullVA.Transition.nondynamic_rows_iff

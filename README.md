@@ -29,6 +29,7 @@ lake env lean scripts/Axioms.lean   # each theorem: [propext, Classical.choice, 
 | `conditional_sixth_order_grid_bound` | Eqs. `g6fva-reduced-grid-bound`, `g6fva-reported-grid-bound` | `C_red = C_loc Γ_s(T)`, `C_qv = C_𝓡 C_red`, order `h⁶` |
 | `NewtonEuler.transRow_eq`, `NewtonEuler.rotRow_eq` | D1/D2 identities (`NEWTON_EULER_BALANCE_IDENTITY_AUDIT`) | implemented `trans`/`rot` rows of `run_v047.py` equal the Newton/Euler balance defects, as ℝ³ vectors with the cross-product torque structure |
 | `NewtonEuler.dynamic_rows_vanish`, `card_dynamic_rows` | P5 (`D5_DYNAMIC_DIRECT_SUBSTITUTION_CERTIFICATE`) | pointwise balance at the lifted stage ⇒ all `3·2·2·3 = 36` rows are exactly `0` |
+| `FullVA.Transition.nondynamic_rows_vanish`, `reducedCollocation_of_rows`, `nondynamic_rows_iff` | the 96 non-dynamic rows (`pvel`, `u_block`, `pacc`, `w_block`, `constraints` of `run_v047.py`, with `joint_kinematics_jax` transcribed) | rows vanish **iff** lower-pair constraints hold at all three levels and the reduced joint coordinates `(s, θ, ṡ, θ̇)` satisfy Gauss collocation; so `F_{A,h}(Z_G) = 0` exactly and `C_R = 0` |
 | `Gauss6.B_six`, `Gauss6.C_three`, `Gauss6.D_three`, `Gauss6.not_B_seven` | Lemma B of `ORDER_PROOF_LEDGER.md` (Butcher simplifying assumptions) | the exact tableau hard-coded in `quaternion_pendulum.py` satisfies `B(6)`, `C(3)`, `D(3)` and fails `B(7)`; with Butcher's theorem (not formalized) this is order exactly 6 |
 | `quadrature_error_bound` | Peano-kernel step of the collocation order proof | rule exact on `x^k, k ≤ n` and `g ∈ C^{n+1}` ⇒ `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ (1 + ∑|bᵢ|) K / n!` |
 | `gauss6_quadrature_error`, `gauss6_step_defect` | local quadrature defect behind `C_G h⁷` | `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ K/60`; on a step, `≤ h · K̃/60` with `K̃ = h⁶ sup|g⁽⁶⁾|` |
@@ -41,7 +42,11 @@ lake env lean scripts/Axioms.lean   # each theorem: [propext, Classical.choice, 
   variation-of-constants transfer from quadrature defect to one-step error are not formalized.
 * **P1/P2/P6 interfaces**: inverse bounds `‖J⁻¹‖ ≤ M`, linearization on balls, endpoint right
   inverse `D ∘ B = id`, stability scale `1 + C_s h`, solver envelope `η ≤ c_η h⁷`, tube margin.
-* **P4**: the 96 non-dynamic rows enter only through `hR : ‖F(Z_G)‖ ≤ C_R h⁷`.
+* **P4**: in the perturbation chain the 96 non-dynamic rows enter only through
+  `hR : ‖F(Z_G)‖ ≤ C_R h⁷`; `FullVA/NonDynamicRows.lean` shows they are exactly `0` at the
+  lifted reduced Gauss stage, so `C_R = 0` is admissible.  See
+  `lie_group_integrator_work/paper_v047_cylindrical_chain/LEAN_RESIDUAL_ROW_FAMILY_AUDIT.md`
+  for the manuscript/implementation row-family mismatch this uncovered.
 * **P5 lift property**: `hlift` says the lifted Gauss stage satisfies the pointwise Newton–Euler
   balance (the defining property of the smooth FullVA lift, `lem:fullva-stage-lift`). What is
   proved is that the *implemented* rows are exactly the balance defects.
@@ -71,6 +76,7 @@ IntegratorOrderProof/
   PerturbationChain/LocalToGlobal.lean    Γ_s(T), discrete Gronwall with tube-retention bootstrap
   PerturbationChain/MainTheorem.lean      C_loc assembly, grid bounds
   NewtonEuler/DynamicRows.lean            36 Newton–Euler rows transcribed from run_v047.py
+  FullVA/NonDynamicRows.lean              96 non-dynamic rows ⇔ constraints + reduced joint-coordinate Gauss collocation
   Gauss/Tableau.lean                      exact Gauss6 tableau, B(6)/C(3)/D(3), ¬B(7)
   Gauss/QuadratureError.lean              Peano-type quadrature error, Gauss6 h⁷ step defect
 scripts/Axioms.lean                       #print axioms for every main theorem
