@@ -5,3 +5,5 @@ import IntegratorOrderProof.PerturbationChain.EndpointClosure
 import IntegratorOrderProof.PerturbationChain.LocalToGlobal
 import IntegratorOrderProof.PerturbationChain.MainTheorem
 import IntegratorOrderProof.NewtonEuler.DynamicRows
+import IntegratorOrderProof.Gauss.Tableau
+import IntegratorOrderProof.Gauss.QuadratureError

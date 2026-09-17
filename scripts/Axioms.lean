@@ -17,3 +17,11 @@ import IntegratorOrderProof
 #print axioms IntegratorOrderProof.NewtonEuler.rotRow_eq
 #print axioms IntegratorOrderProof.NewtonEuler.dynamic_rows_vanish
 #print axioms IntegratorOrderProof.NewtonEuler.card_dynamic_rows
+#print axioms IntegratorOrderProof.Gauss6.B_six
+#print axioms IntegratorOrderProof.Gauss6.not_B_seven
+#print axioms IntegratorOrderProof.Gauss6.C_three
+#print axioms IntegratorOrderProof.Gauss6.D_three
+#print axioms IntegratorOrderProof.Gauss6.butcher_order_six_hypotheses
+#print axioms IntegratorOrderProof.quadrature_error_bound
+#print axioms IntegratorOrderProof.gauss6_quadrature_error
+#print axioms IntegratorOrderProof.gauss6_step_defect
