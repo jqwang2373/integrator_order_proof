@@ -53,7 +53,7 @@ theorem quadrature_error_bound {ι : Type*} [Fintype ι] (b c : ι → ℝ) (n :
   -- the rule is exact on `P`
   have hPexact : (∫ x in (0 : ℝ)..1, P x) = ∑ i, b i * P (c i) := by
     simp only [hP]
-    rw [integral_finset_sum (fun k _ =>
+    rw [integral_finsetSum (fun k _ =>
       (by fun_prop : Continuous fun x : ℝ => a k * x ^ k).intervalIntegrable _ _)]
     simp_rw [integral_const_mul, integral_pow, mul_sum]
     rw [sum_comm]

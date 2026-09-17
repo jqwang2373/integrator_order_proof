@@ -14,8 +14,8 @@ import IntegratorOrderProof
 #print axioms IntegratorOrderProof.local_defect_bound
 #print axioms IntegratorOrderProof.local_defect_bound_paper
 #print axioms IntegratorOrderProof.conditional_sixth_order_grid_bound
-#print axioms IntegratorOrderProof.NewtonEuler.transRow_eq
-#print axioms IntegratorOrderProof.NewtonEuler.rotRow_eq
+#print axioms IntegratorOrderProof.NewtonEuler.StageData.transRow_eq
+#print axioms IntegratorOrderProof.NewtonEuler.StageData.rotRow_eq
 #print axioms IntegratorOrderProof.NewtonEuler.dynamic_rows_vanish
 #print axioms IntegratorOrderProof.NewtonEuler.card_dynamic_rows
 #print axioms IntegratorOrderProof.Gauss6.B_six

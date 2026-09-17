@@ -74,7 +74,7 @@ theorem c_mem_Icc (i : Fin 3) : c i ∈ Set.Icc (0 : ℝ) 1 := by
     exact ⟨by linarith, by linarith⟩
 
 theorem b_pos (i : Fin 3) : 0 < b i := by
-  fin_cases i <;> simp [b] <;> norm_num
+  fin_cases i <;> simp [b]
 
 theorem sum_b : ∑ i, b i = 1 := by
   simp [b, Fin.sum_univ_three]; norm_num
