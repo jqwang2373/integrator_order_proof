@@ -2,6 +2,7 @@
 -- Every theorem must report only [propext, Classical.choice, Quot.sound]; `sorryAx` must not appear.
 import IntegratorOrderProof
 #print axioms IntegratorOrderProof.exists_root_of_linearization
+#print axioms IntegratorOrderProof.root_unique_of_linearization
 #print axioms IntegratorOrderProof.stage_root_exists_unique
 #print axioms IntegratorOrderProof.linearization_of_fderiv_bound
 #print axioms IntegratorOrderProof.inexact_newton_output_bound
