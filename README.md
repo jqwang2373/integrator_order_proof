@@ -3,8 +3,12 @@
 Lean 4 + Mathlib formalization of the **conditional sixth-order theorem chain** for the
 `Gauss6/FullVA` Lie-group integrator of the CMAME manuscript
 `lie_group_integrator_work/paper_v047_cylindrical_chain/main_cmame.tex`
-(theorem `thm:g6fullva-order`), the 36 Newton–Euler dynamic-row identities (P5), and the
-Gauss6 tableau order conditions with a Peano-type `h⁷` quadrature-defect bound.
+(theorem `thm:g6fullva-order`), the exact stage identity (all 132 implemented rows vanish at the
+lifted reduced Gauss stage), the Gauss6 tableau order conditions with a Peano-type `h⁷`
+quadrature-defect bound, and the two perturbation lemmas that reduce the P2 and P6 interfaces to
+P1 plus a small-step threshold (`lem:p2-from-p1`, `lem:newton-envelope`).
+
+A copy of these sources ships in the paper package at `paper_v047_cylindrical_chain/lean/`.
 
 Toolchain: `leanprover/lean4:v4.34.0`, Mathlib tag `v4.34.0` (pinned in `lakefile.toml`).
 
@@ -33,6 +37,8 @@ lake env lean scripts/Axioms.lean   # each theorem: [propext, Classical.choice, 
 | `Gauss6.B_six`, `Gauss6.C_three`, `Gauss6.D_three`, `Gauss6.not_B_seven` | Lemma B of `ORDER_PROOF_LEDGER.md` (Butcher simplifying assumptions) | the exact tableau hard-coded in `quaternion_pendulum.py` satisfies `B(6)`, `C(3)`, `D(3)` and fails `B(7)`; with Butcher's theorem (not formalized) this is order exactly 6 |
 | `quadrature_error_bound` | Peano-kernel step of the collocation order proof | rule exact on `x^k, k ≤ n` and `g ∈ C^{n+1}` ⇒ `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ (1 + ∑|bᵢ|) K / n!` |
 | `gauss6_quadrature_error`, `gauss6_step_defect` | local quadrature defect behind `C_G h⁷` | `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ K/60`; on a step, `≤ h · K̃/60` with `K̃ = h⁶ sup|g⁽⁶⁾|` |
+| `norm_le_of_perturbed`, `uniform_inverse_of_perturbation` | `lem:p2-from-p1`, Eq. `p2-perturbation-bound` | `‖J₀⁻¹‖ ≤ M₀`, `‖J − J₀‖ ≤ δ`, `M₀δ ≤ ½` ⇒ `J` bijective (finite dimension) with `‖J⁻¹‖ ≤ 2M₀`; applied to `J_h = J_0 + O(h)` |
+| `simplified_newton_residual_decay` | `lem:newton-envelope`, Eq. `newton-envelope-decay` | simplified Newton from any point of the contraction ball: `‖Zᵏ − Z_G‖ ≤ 2⁻ᵏ‖Z⁰ − Z_G‖`, `‖Φ(Zᵏ)‖ ≤ L_Φ 2⁻ᵏ‖Z⁰ − Z_G‖`; the `c_η h⁷` stopping rule of P6 is reached |
 
 ## What is assumed (enters as hypotheses, not proved here)
 
@@ -42,6 +48,9 @@ lake env lean scripts/Axioms.lean   # each theorem: [propext, Classical.choice, 
   variation-of-constants transfer from quadrature defect to one-step error are not formalized.
 * **P1/P2/P6 interfaces**: inverse bounds `‖J⁻¹‖ ≤ M`, linearization on balls, endpoint right
   inverse `D ∘ B = id`, stability scale `1 + C_s h`, solver envelope `η ≤ c_η h⁷`, tube margin.
+  `PerturbationChain/JacobianPerturbation.lean` reduces the inverse bound and the solver envelope
+  to P1-type data plus `h ≤ h₀`; the block-structure argument for the `h → 0` Jacobian `J_0` and
+  the `O(h)` predictor distance remain paper arguments.
 * **P4**: in the perturbation chain the 96 non-dynamic rows enter only through
   `hR : ‖F(Z_G)‖ ≤ C_R h⁷`; `FullVA/NonDynamicRows.lean` shows they are exactly `0` at the
   lifted reduced Gauss stage, so `C_R = 0` is admissible.  See
@@ -75,6 +84,7 @@ IntegratorOrderProof/
   PerturbationChain/EndpointClosure.lean  right-inverse endpoint closure
   PerturbationChain/LocalToGlobal.lean    Γ_s(T), discrete Gronwall with tube-retention bootstrap
   PerturbationChain/MainTheorem.lean      C_loc assembly, grid bounds
+  PerturbationChain/JacobianPerturbation.lean  uniform inverse under O(h) perturbation; simplified Newton residual decay
   NewtonEuler/DynamicRows.lean            36 Newton–Euler rows transcribed from run_v047.py
   FullVA/NonDynamicRows.lean              96 non-dynamic rows ⇔ constraints + reduced joint-coordinate Gauss collocation
   Gauss/Tableau.lean                      exact Gauss6 tableau, B(6)/C(3)/D(3), ¬B(7)
