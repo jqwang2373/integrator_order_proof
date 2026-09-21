@@ -2,15 +2,15 @@
 
 Lean 4 + Mathlib formalization of the **conditional sixth-order theorem chain** for the
 `Gauss6/FullVA` Lie-group integrator of the CMAME manuscript
-`lie_group_integrator_work/paper_v047_cylindrical_chain/main_cmame.tex`
+`paper/main_cmame.tex`
 (theorem `thm:g6fullva-order`), the exact stage identity (all 132 implemented rows vanish at the
 lifted reduced Gauss stage), the Gauss6 tableau order conditions with a Peano-type `h⁷`
 quadrature-defect bound, and the two perturbation lemmas that reduce the P2 and P6 interfaces to
 P1 plus a small-step threshold (`lem:p2-from-p1`, `lem:newton-envelope`).
 
-A copy of these sources ships in the paper package at `paper_v047_cylindrical_chain/lean/`.
+A copy of these sources lives in the research repository at `proof/`.
 
-Repository: <https://github.com/jqwang2373/integrator_order_proof> (private; a byte-identical copy ships in the paper package as `paper_v047_cylindrical_chain/lean/`).
+Repository: <https://github.com/jqwang2373/integrator_order_proof> (private; a byte-identical copy lives in the research repository as `proof/`).
 
 Toolchain: `leanprover/lean4:v4.34.0`, Mathlib tag `v4.34.0` (pinned in `lakefile.toml`).
 
@@ -41,7 +41,7 @@ and fails if any depends on `sorryAx` or on a non-standard axiom.
 | `NewtonEuler.transRow_eq`, `NewtonEuler.rotRow_eq` | D1/D2 identities (`NEWTON_EULER_BALANCE_IDENTITY_AUDIT`) | implemented `trans`/`rot` rows of `run_v047.py` equal the Newton/Euler balance defects, as ℝ³ vectors with the cross-product torque structure |
 | `NewtonEuler.dynamic_rows_vanish`, `card_dynamic_rows` | dynamic half of `lem:exact-stage-identity` (formerly the P5 direct-substitution interface) | pointwise balance at the lifted stage ⇒ all `3·2·2·3 = 36` rows are exactly `0` |
 | `FullVA.Transition.nondynamic_rows_vanish`, `reducedCollocation_of_rows`, `nondynamic_rows_iff` | the 96 non-dynamic rows (`pvel`, `u_block`, `pacc`, `w_block`, `constraints` of `run_v047.py`, with `joint_kinematics_jax` transcribed) | rows vanish **iff** lower-pair constraints hold at all three levels and the reduced joint coordinates `(s, θ, ṡ, θ̇)` satisfy Gauss collocation; so `F_{A,h}(Z_G) = 0` exactly and `C_R = 0` |
-| `Gauss6.B_six`, `Gauss6.C_three`, `Gauss6.D_three`, `Gauss6.not_B_seven` | Lemma B of `ORDER_PROOF_LEDGER.md` (Butcher simplifying assumptions) | the exact tableau hard-coded in `quaternion_pendulum.py` satisfies `B(6)`, `C(3)`, `D(3)` and fails `B(7)`; with Butcher's theorem (not formalized) this is order exactly 6 |
+| `Gauss6.B_six`, `Gauss6.C_three`, `Gauss6.D_three`, `Gauss6.not_B_seven` | Lemma B of `validation/docs/ORDER_PROOF_LEDGER.md` (Butcher simplifying assumptions) | the exact tableau hard-coded in `quaternion_pendulum.py` satisfies `B(6)`, `C(3)`, `D(3)` and fails `B(7)`; with Butcher's theorem (not formalized) this is order exactly 6 |
 | `quadrature_error_bound` | Peano-kernel step of the collocation order proof | rule exact on `x^k, k ≤ n` and `g ∈ C^{n+1}` ⇒ `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ (1 + ∑|bᵢ|) K / n!` |
 | `gauss6_quadrature_error`, `gauss6_step_defect` | local quadrature defect behind `C_G h⁷` | `|∫₀¹ g − ∑ bᵢ g(cᵢ)| ≤ K/60`; on a step, `≤ h · K̃/60` with `K̃ = h⁶ sup|g⁽⁶⁾|` |
 | `norm_le_of_perturbed`, `uniform_inverse_of_perturbation` | `lem:p2-from-p1`, Eq. `p2-perturbation-bound` | `‖J₀⁻¹‖ ≤ M₀`, `‖J − J₀‖ ≤ δ`, `M₀δ ≤ ½` ⇒ `J` bijective (finite dimension) with `‖J⁻¹‖ ≤ 2M₀`; applied to `J_h = J_0 + O(h)` |
@@ -49,7 +49,7 @@ and fails if any depends on `sorryAx` or on a non-standard axiom.
 
 ## What is assumed (enters as hypotheses, not proved here)
 
-* **Gauss collocation order and Lie-group chart transfer** (Lemmas A/B of `ORDER_PROOF_LEDGER.md`):
+* **Gauss collocation order and Lie-group chart transfer** (Lemmas A/B of `validation/docs/ORDER_PROOF_LEDGER.md`):
   the hypothesis `hG : ‖𝓔(Z_G) - φ_h(y)‖ ≤ C_G h⁷`.  The Gauss files prove the algebraic order
   conditions of the tableau and the quadrature-defect bound; Butcher's theorem and the
   variation-of-constants transfer from quadrature defect to one-step error are not formalized.
@@ -63,7 +63,7 @@ and fails if any depends on `sorryAx` or on a non-standard axiom.
   `NewtonEuler/DynamicRows.lean` show all 132 rows are exactly `0` at the lifted reduced Gauss
   stage (`lem:exact-stage-identity`), so `C_R = 0` and the manuscript's three-term
   `C_loc = C_G + C_E + C_N c_η` is the special case of `local_defect_bound`.  See
-  `lie_group_integrator_work/paper_v047_cylindrical_chain/notes/LEAN_RESIDUAL_ROW_FAMILY_AUDIT.md`
+  `validation/paper_v047_cylindrical_chain/notes/LEAN_RESIDUAL_ROW_FAMILY_AUDIT.md`
   for the manuscript/implementation row-family mismatch this uncovered.
 * **Lift property**: `hlift` says the lifted Gauss stage satisfies the pointwise Newton–Euler
   balance (the defining property of the smooth FullVA lift). What is proved is that the
